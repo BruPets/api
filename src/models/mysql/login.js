@@ -6,22 +6,28 @@ export class LoginModel {
   static async login ({ input }) {
     const { email, password } = input
 
-    const [[user]] = await connection.query(
-      `
-      SELECT 
-        BIN_TO_UUID(users.USER_ID) AS id, 
-        users.USER_NAME AS name, 
-        users.USER_EMAIL AS email, 
-        users.USER_PASSWORD AS password, 
-        roles.ROLE_NAME AS role 
-      FROM 
-        users 
-        INNER JOIN roles ON users.USER_ROLE_ID = roles.ROLE_ID 
-      WHERE 
-        users.user_email = ?;
-    `,
-      [email]
-    )
+    let user = null
+
+    try {
+      [[user]] = await connection.query(
+        `
+        SELECT 
+          USERS.USER_ID AS id, 
+          USERS.USER_NAME AS name, 
+          USERS.USER_EMAIL AS email, 
+          USERS.USER_PASSWORD AS password, 
+          ROLES.ROLE_NAME AS role 
+        FROM 
+          USERS 
+          INNER JOIN ROLES ON USERS.USER_ROLE_ID = ROLES.ROLE_ID 
+        WHERE 
+          USERS.USER_EMAIL = ?;
+        `,
+        [email]
+      )
+    } catch (error) {
+      throw new CustomError({ message: 'Query invalid!', status: 500 })
+    }
 
     if (!user) {
       throw new CustomError({ message: 'User not found!', status: 404 })
