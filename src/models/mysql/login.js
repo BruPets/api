@@ -26,6 +26,7 @@ export class LoginModel {
         [email]
       )
     } catch (error) {
+      console.log(error)
       throw new CustomError({ message: 'Query invalid!', status: 500 })
     }
 
