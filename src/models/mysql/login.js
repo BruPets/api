@@ -1,6 +1,7 @@
 import { accessToken } from '../../helpers/accessToken.js'
 import { CustomError } from '../../helpers/customError.js'
-import { connection } from './index.js'
+import { db } from './index.js'
+const promise = db.promise()
 
 export class LoginModel {
   static async login ({ input }) {
@@ -9,7 +10,7 @@ export class LoginModel {
     let user = null
 
     try {
-      [[user]] = await connection.query(
+      [[user]] = await promise.execute(
         `
         SELECT 
           USERS.USER_ID AS id, 
@@ -26,7 +27,6 @@ export class LoginModel {
         [email]
       )
     } catch (error) {
-      console.log(error)
       throw new CustomError({ message: 'Query invalid!', status: 500 })
     }
 

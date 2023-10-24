@@ -1,4 +1,4 @@
-import mysql from 'mysql2/promise'
+import mysql from 'mysql2'
 import { DATABASE_URL } from '../../config/index.js'
 
-export const connection = await mysql.createConnection(DATABASE_URL)
+export const db = mysql.createPool(DATABASE_URL)
