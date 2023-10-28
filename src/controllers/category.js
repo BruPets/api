@@ -9,11 +9,15 @@ export class CategoryController {
     const result = validateCategory(req.body)
 
     if (!result.success) {
-      return res.status(400).json({ message: JSON.parse(result.error.message) })
+      return res
+        .status(400)
+        .json({ message: JSON.parse(result.error.message) })
     }
 
     try {
-      res.status(201).json(await this.categoryModel.create({ input: result.data }))
+      res
+        .status(201)
+        .json(await this.categoryModel.create({ input: result.data }))
     } catch (error) {
       res.status(error.name).json({ message: error.message })
     }
@@ -29,8 +33,15 @@ export class CategoryController {
 
   getById = async (req, res) => {
     const { id } = req.params
+
+    if (isNaN(id)) {
+      return res.status(400).json({ message: 'Invalid id format' })
+    }
+
     try {
-      res.status(200).json(await this.categoryModel.getById({ id }))
+      res
+        .status(200)
+        .json(await this.categoryModel.getById({ id: Number(id) }))
     } catch (error) {
       res.status(error.name).json({ message: error.message })
     }

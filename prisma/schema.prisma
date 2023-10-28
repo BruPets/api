@@ -10,7 +10,7 @@ datasource db {
 model Category {
   id          Int                    @id @default(autoincrement())
   name        String                 @unique() @db.VarChar(50)
-  descriprion String?
+  description String?
   status      Boolean                @default(true)
   products    CategoriesOnProducts[]
 }
@@ -146,7 +146,7 @@ model Person {
   typeId Int
   type   PersonType @relation(fields: [typeId], references: [id])
 
-  sales  Sale[]
+  sales   Sale[]
   incomes Income[]
 }
 
@@ -176,6 +176,6 @@ model User {
   documentId Int
   document   DocumentType @relation(fields: [documentId], references: [id])
 
-  sales  Sale[]
+  sales   Sale[]
   incomes Income[]
 }

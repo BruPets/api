@@ -6,67 +6,29 @@ export class CategoryModel {
     const { name, description } = input
 
     try {
-      const [[insertId]] = await prisma.execute(
-        `
-          INSERT INTO CATEGORIES (CATEGORY_NAME, CATEGORY_DESCRIPTION)
-          VALUE (?, ?);
-        `, [name, description]
-      )
-
-      return { insertId }
+      return await prisma.category.create({
+        data: { name, description }
+      })
     } catch (error) {
       throw new CustomError({ message: error.message, status: 409 })
     }
   }
 
   static async getAll () {
-    let categories = null
     try {
-      [categories] = await prisma.execute(
-        `
-        SELECT
-          CATEGORY_ID AS id,
-          CATEGORY_NAME AS name,
-          CATEGORY_DESCRIPTION AS description,
-          CATEGORY_STATUS AS status
-        FROM
-          CATEGORIES;
-          `
-      )
+      return await prisma.category.findMany({})
     } catch (error) {
       throw new CustomError({ message: 'Query invalid!', status: 500 })
     }
-
-    return categories
   }
 
   static async getById ({ id }) {
-    let category = null
     try {
-      [[category]] = await prisma.execute(
-        `
-          SELECT
-            CATEGORY_ID AS id,
-            CATEGORY_NAME AS name,
-            CATEGORY_DESCRIPTION AS description,
-            CATEGORY_STATUS AS status
-          FROM
-            CATEGORIES
-          WHERE CATEGORY_ID = ?;
-        `, [id]
-      )
+      return await prisma.category.findUniqueOrThrow({ where: { id } })
     } catch (error) {
-      throw new CustomError({ message: 'Query invalid!', status: 500 })
+      throw new CustomError({ message: error.message, status: 404 })
     }
-
-    if (!category) {
-      throw new CustomError({ message: `Category as id: ${id} not found!`, status: 404 })
-    }
-
-    return category
   }
 
-  static async update ({ id, input }) {
-
-  }
+  static async update ({ id, input }) {}
 }
