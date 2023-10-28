@@ -9,7 +9,7 @@ export class LoginModel {
     let user = null
 
     try {
-      user = await prisma.user.findUniqueOrThrow({ where: { email } })
+      user = await prisma.user.findUniqueOrThrow({ where: { email }, include: { role: true } })
     } catch (error) {
       throw new CustomError({ message: error.message, status: 500 })
     }
@@ -28,8 +28,8 @@ export class LoginModel {
       id,
       name,
       email: user.email,
-      role,
-      token: accessToken({ id, role })
+      role: role.name,
+      token: accessToken({ id, role: role.name })
     }
   }
 }

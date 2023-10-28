@@ -147,7 +147,7 @@ model Person {
   type   PersonType @relation(fields: [typeId], references: [id])
 
   sales  Sale[]
-  Income Income[]
+  incomes Income[]
 }
 
 model Role {
@@ -177,5 +177,5 @@ model User {
   document   DocumentType @relation(fields: [documentId], references: [id])
 
   sales  Sale[]
-  nncomes Income[]
+  incomes Income[]
 }
