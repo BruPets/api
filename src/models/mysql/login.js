@@ -1,7 +1,6 @@
 import { accessToken } from '../../helpers/accessToken.js'
 import { CustomError } from '../../helpers/customError.js'
-import { db } from './index.js'
-const promise = db.promise()
+import { prisma } from './index.js'
 
 export class LoginModel {
   static async login ({ input }) {
@@ -10,24 +9,9 @@ export class LoginModel {
     let user = null
 
     try {
-      [[user]] = await promise.execute(
-        `
-        SELECT 
-          USERS.USER_ID AS id, 
-          USERS.USER_NAME AS name, 
-          USERS.USER_EMAIL AS email, 
-          USERS.USER_PASSWORD AS password, 
-          ROLES.ROLE_NAME AS role 
-        FROM 
-          USERS 
-          INNER JOIN ROLES ON USERS.USER_ROLE_ID = ROLES.ROLE_ID 
-        WHERE 
-          USERS.USER_EMAIL = ?;
-        `,
-        [email]
-      )
+      user = await prisma.user.findUniqueOrThrow({ where: { email } })
     } catch (error) {
-      throw new CustomError({ message: 'Query invalid!', status: 500 })
+      throw new CustomError({ message: error.message, status: 500 })
     }
 
     if (!user) {

@@ -1,0 +1,181 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id          Int                    @id @default(autoincrement())
+  name        String                 @unique() @db.VarChar(50)
+  descriprion String?
+  status      Boolean                @default(true)
+  products    CategoriesOnProducts[]
+}
+
+model Product {
+  id          String  @id @default(uuid())
+  code        String  @unique @db.VarChar(50)
+  name        String  @unique @db.VarChar(100)
+  description String  @db.LongText
+  price       Decimal @db.Decimal(11, 2)
+  stock       Int     @default(0)
+  status      Boolean @default(true)
+  image       String  @db.VarChar(150)
+
+  images     Image[]
+  categories CategoriesOnProducts[]
+  incomes    ProductsOnIncomes[]
+  sales      ProductsOnSales[]
+}
+
+model CategoriesOnProducts {
+  assignedAt DateTime @default(now())
+
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+
+  @@id([categoryId, productId])
+}
+
+model DocumentType {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(50)
+
+  people Person[]
+  users  User[]
+}
+
+model Image {
+  id  Int    @id @default(autoincrement())
+  url String @db.VarChar(150)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Income {
+  id    String   @id @default(uuid())
+  date  DateTime @default(now())
+  tax   Decimal  @db.Decimal(4, 2)
+  total Decimal  @db.Decimal(11, 2)
+
+  incomeStatusId Int
+  incomeStatus   InvoiceStatus @relation(fields: [incomeStatusId], references: [id])
+
+  supplierId Int?
+  supplier   Person? @relation(fields: [supplierId], references: [id])
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  products ProductsOnIncomes[]
+}
+
+model ProductsOnIncomes {
+  id              Int     @id @default(autoincrement())
+  productQuantity Int
+  productPrice    Decimal @db.Decimal(11, 2)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+
+  incomeId String
+  income   Income @relation(fields: [incomeId], references: [id])
+}
+
+model Sale {
+  id    String   @id @default(uuid())
+  date  DateTime @default(now())
+  tax   Decimal  @db.Decimal(4, 2)
+  total Decimal  @db.Decimal(11, 2)
+
+  saleStatusId Int
+  saleStatus   InvoiceStatus @relation(fields: [saleStatusId], references: [id])
+
+  clientId Int?
+  client   Person? @relation(fields: [clientId], references: [id])
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  products ProductsOnSales[]
+}
+
+model ProductsOnSales {
+  id              Int     @id @default(autoincrement())
+  productQuantity Int
+  productPrice    Decimal @db.Decimal(11, 2)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+
+  saleId String
+  sale   Sale   @relation(fields: [saleId], references: [id])
+}
+
+model InvoiceStatus {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  incomes Income[]
+  sales   Sale[]
+}
+
+model PersonType {
+  id     Int      @id @default(autoincrement())
+  name   String   @unique @db.VarChar(50)
+  people Person[]
+}
+
+model Person {
+  id      Int     @id @default(autoincrement())
+  name    String  @db.VarChar(100)
+  email   String? @db.VarChar(50)
+  nit     String? @db.VarChar(20)
+  phone   String? @db.VarChar(20)
+  address String? @db.VarChar(150)
+
+  documentId Int
+  document   DocumentType @relation(fields: [documentId], references: [id])
+
+  typeId Int
+  type   PersonType @relation(fields: [typeId], references: [id])
+
+  sales  Sale[]
+  Income Income[]
+}
+
+model Role {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique @db.VarChar(20)
+  description String? @db.VarChar(255)
+  status      Boolean @default(true)
+
+  users User[]
+}
+
+model User {
+  id       String  @id @default(uuid())
+  name     String  @db.VarChar(50)
+  nit      String  @unique @db.VarChar(20)
+  email    String  @unique
+  password String
+  phone    String? @db.VarChar(20)
+  address  String? @db.VarChar(150)
+  image    String? @db.VarChar(150)
+  status   Boolean @default(true)
+
+  roleId Int
+  role   Role @relation(fields: [roleId], references: [id])
+
+  documentId Int
+  document   DocumentType @relation(fields: [documentId], references: [id])
+
+  sales  Sale[]
+  nncomes Income[]
+}

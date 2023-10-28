@@ -1,4 +1,3 @@
-import mysql from 'mysql2'
-import { DATABASE_URL } from '../../config/index.js'
+import { PrismaClient } from '@prisma/client'
 
-export const db = mysql.createPool(DATABASE_URL)
+export const prisma = new PrismaClient()

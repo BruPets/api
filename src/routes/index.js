@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { createLoginRouter } from './login.js'
+import { createCategoryRouter } from './category.js'
 
 export const createRootRouter = () => {
   const rootRouter = Router()
@@ -9,6 +10,7 @@ export const createRootRouter = () => {
   })
 
   rootRouter.use('/', createLoginRouter())
+  rootRouter.use('/categories', createCategoryRouter())
 
   return rootRouter
 }
