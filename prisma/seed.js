@@ -23,6 +23,14 @@ const main = async () => {
     }
   })
 
+  await prisma.category.createMany({
+    data: [
+      { name: 'Perros', description: 'Cannis Lupus' },
+      { name: 'Alimento', description: 'Alimento para cualquier animal.c' }
+    ],
+    skipDuplicates: true
+  })
+
   await prisma.user.upsert({
     where: { email: 'garcianaranjodairo@gmail.com' },
     update: {},

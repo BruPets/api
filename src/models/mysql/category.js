@@ -1,5 +1,5 @@
 import { CustomError } from '../../helpers/customError.js'
-import { prisma } from './index.js'
+import { prisma } from '../../prisma/index.js'
 
 export class CategoryModel {
   static async create ({ input }) {
