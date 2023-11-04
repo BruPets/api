@@ -23,7 +23,7 @@ model Product {
   price       Decimal @db.Decimal(11, 2)
   stock       Int     @default(0)
   status      Boolean @default(true)
-  image       String  @db.VarChar(150)
+  image       String
 
   images     Image[]
   categories CategoriesOnProducts[]

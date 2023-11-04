@@ -3,7 +3,7 @@ import { prisma } from '../prisma/index.js'
 
 export class ProductModel {
   static async create ({ input }) {
-    const { name, code, description, price, image, categories } = input
+    const { name, code, description, price, image, categories, stock } = input
 
     let newProduct = null
     try {
@@ -13,7 +13,8 @@ export class ProductModel {
           code,
           description,
           price,
-          image
+          image,
+          stock
         }
       })
     } catch (error) {
