@@ -46,4 +46,32 @@ export class CategoryController {
       res.status(error.name).json({ message: error.message })
     }
   }
+
+  upsert = async (req, res) => {
+    const result = validateCategory(req.body)
+
+    if (!result.success) {
+      return res
+        .status(400)
+        .json({ message: JSON.parse(result.error.message) })
+    }
+
+    try {
+      res
+        .status(201)
+        .json(await this.categoryModel.upsert({ input: result.data }))
+    } catch (error) {
+      res.status(error.name).json({ message: error.message })
+    }
+  }
+
+  delete = async (req, res) => {
+    const { id } = req.params
+
+    try {
+      res.status(200).json(await this.categoryModel.delete({ id: Number(id) }))
+    } catch (error) {
+      res.status(error.name).json({ message: error.message })
+    }
+  }
 }

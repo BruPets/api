@@ -39,7 +39,15 @@ export class ProductModel {
 
   static async getAll () {
     try {
-      return await prisma.product.findMany({})
+      return await prisma.product.findMany({
+        include: {
+          categories: {
+            include: {
+              category: true
+            }
+          }
+        }
+      })
     } catch (error) {
       throw new CustomError({ message: error.message, status: 400 })
     }

@@ -30,5 +30,29 @@ export class CategoryModel {
     }
   }
 
+  static async delete ({ id }) {
+    try {
+      return await prisma.category.delete({ where: { id } })
+    } catch (error) {
+      throw new CustomError({ message: 'Esta categoría no se puede eliminar, ya que pertenece a un producto!', status: 404 })
+    }
+  }
+
+  static async upsert ({ input }) {
+    const { name } = input
+
+    try {
+      return await prisma.category.upsert({
+        where: {
+          name
+        },
+        create: input,
+        update: input
+      })
+    } catch (error) {
+      throw new CustomError({ message: error.message, status: 401 })
+    }
+  }
+
   static async update ({ id, input }) {}
 }
