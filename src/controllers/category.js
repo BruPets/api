@@ -65,6 +65,21 @@ export class CategoryController {
     }
   }
 
+  update = async (req, res) => {
+    const result = validateCategory(req.body)
+    const { id } = req.params
+
+    if (!result.success) {
+      return res.status(400).json({ message: JSON.parse(result.error.message) })
+    }
+
+    try {
+      res.status(200).json(await this.categoryModel.update({ id: Number(id), input: result.data }))
+    } catch (error) {
+      res.status(error.name).json({ message: error.message })
+    }
+  }
+
   delete = async (req, res) => {
     const { id } = req.params
 

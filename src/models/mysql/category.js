@@ -54,5 +54,16 @@ export class CategoryModel {
     }
   }
 
-  static async update ({ id, input }) {}
+  static async update ({ id, input }) {
+    try {
+      return await prisma.category.update({
+        where: {
+          id
+        },
+        data: input
+      })
+    } catch (error) {
+      throw new CustomError({ message: error.message, status: 401 })
+    }
+  }
 }

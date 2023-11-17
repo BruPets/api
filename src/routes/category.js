@@ -10,6 +10,7 @@ export const createCategoryRouter = () => {
 
   categoryRouter.get('/', categoryController.getAll)
   categoryRouter.get('/:id', categoryController.getById)
+  categoryRouter.put('/:id', authenticateToken, categoryController.update)
   categoryRouter.post('/', categoryController.create)
   categoryRouter.patch('/', authenticateToken, categoryController.upsert)
   categoryRouter.delete('/:id', authenticateToken, categoryController.delete)
