@@ -26,7 +26,6 @@ export class ProductController {
 
   static async getById (req, res) {
     const { id } = req.params
-    console.log(id)
     try {
       res.status(200).json(await ProductModel.getById({ id }))
     } catch (error) {
