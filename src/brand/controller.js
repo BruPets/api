@@ -6,7 +6,7 @@ export class BrandController {
     const result = validateBrand(req.body)
 
     if (!result.success) {
-      return res.status(206).json({ message: JSON.parse(result.error.message) })
+      return res.status(400).json({ message: JSON.parse(result.error.message) })
     }
 
     try {

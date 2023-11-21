@@ -5,7 +5,7 @@ import { authenticateToken } from '../helpers/authenticateToken.js'
 export const createBrandRouter = () => {
   const brandRouter = Router()
 
-  brandRouter.post('/', BrandController.create)
+  brandRouter.post('/', authenticateToken, BrandController.create)
   brandRouter.get('/', BrandController.getAll)
   brandRouter.get('/:id', BrandController.getById)
   brandRouter.put('/:id', authenticateToken, BrandController.update)
