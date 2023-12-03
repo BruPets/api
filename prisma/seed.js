@@ -57,6 +57,22 @@ const main = async () => {
     }
   })
 
+  await prisma.user.upsert({
+    where: { email: 'garcianaranjodairo@gmail.com' },
+    update: {},
+    create: {
+      name: 'Dairo Garcia Naranjo',
+      email: 'garcianaranjodairo@gmail.com',
+      password: '12345',
+      documentId: documentTypeCC.id,
+      roleId: adminRole.id,
+      phone: '3027485520',
+      nit: '1117531976',
+      image:
+        'https://th.bing.com/th/id/OIP.Y6Tw5wohNFH0w1_QUC_KlgHaEK?pid=ImgDet&rs=1'
+    }
+  })
+
   await prisma.product.createMany({
     data: products,
     skipDuplicates: true
