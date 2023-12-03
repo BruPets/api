@@ -1,3 +1,4 @@
+import { ITEMS_PER_PAGE } from '../config/pagination.js'
 import { ProductModel } from './model.js'
 import { validateProduct } from './schema.js'
 
@@ -17,8 +18,18 @@ export class ProductController {
   }
 
   static async getAll (req, res) {
+    let page = 0
+    if (req.query.page) {
+      page = Number(req.query.page)
+    }
+
+    let items = ITEMS_PER_PAGE
+    if (req.query.items) {
+      items = Number(req.query.items)
+    }
+
     try {
-      res.status(200).json(await ProductModel.getAll())
+      res.status(200).json(await ProductModel.getAll({ page, items }))
     } catch (error) {
       res.status(error.name).json({ message: error.message })
     }

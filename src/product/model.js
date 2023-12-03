@@ -37,17 +37,9 @@ export class ProductModel {
     return newProduct
   }
 
-  static async getAll () {
+  static async getAll ({ page, items }) {
     try {
-      return await prisma.product.findMany({
-        include: {
-          categories: {
-            include: {
-              category: true
-            }
-          }
-        }
-      })
+      return await prisma.product.findMany({ skip: page * items, take: items, where: { status: true }, orderBy: { id: 'asc' } })
     } catch (error) {
       throw new CustomError({ message: error.message, status: 400 })
     }

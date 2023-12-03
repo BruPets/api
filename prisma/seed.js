@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { products } from './products.js'
 
 const prisma = new PrismaClient()
 
@@ -31,6 +32,15 @@ const main = async () => {
     skipDuplicates: true
   })
 
+  await prisma.brand.createMany({
+    data: [
+      { name: 'Monchilu', image: 'https://monchilu.com/images/logo.png' },
+      { name: 'Benito', image: 'https://benitomoda.mx/cdn/shop/files/pp_grande.jpg' },
+      { name: 'Chunky', image: 'https://www.agrocampo.com.co/media/catalog/product/cache/d51e0dc10c379a6229d70d752fc46d83/1/1/111100173-v1-min.jpg' }
+    ],
+    skipDuplicates: true
+  })
+
   await prisma.user.upsert({
     where: { email: 'garcianaranjodairo@gmail.com' },
     update: {},
@@ -45,6 +55,11 @@ const main = async () => {
       image:
         'https://th.bing.com/th/id/OIP.Y6Tw5wohNFH0w1_QUC_KlgHaEK?pid=ImgDet&rs=1'
     }
+  })
+
+  await prisma.product.createMany({
+    data: products,
+    skipDuplicates: true
   })
 }
 
